@@ -19,8 +19,7 @@ async def welcome():
 async def incoming_call(request: Request):
     form = await request.form()
     caller_number = form.get("From", "Unknown")
-    # 生成一个简单会话ID，可以用电话号码或随机ID
-    call_session_id = caller_number.replace("+", "")  
+    call_session_id = caller_number.replace("+", "")
 
     twiml = f"""
 <Response>
@@ -49,3 +48,12 @@ async def websocket_endpoint(websocket: WebSocket, call_session_id: str):
             await websocket.send_text(reply)
     except WebSocketDisconnect:
         print(f"WebSocket disconnected: {call_session_id}")
+
+
+# ----------------------------
+# Run directly (for local & Railway)
+# ----------------------------
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port)
